@@ -96,6 +96,7 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
         with archive.open(f"data/{dir_name}/img/{img_name}.bmp", "r") as f:
             # move image to memory immediately, avoid lazy loading, which will lead to None pointer error in loading
             img = Image.open(f).copy()
+            img = img.resize((224, 224))
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
@@ -129,15 +130,12 @@ def collate_fn(batch):
     images_x = batch[1]
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
-    images_x = [s.resize(224,224) for s in images_x]
-
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
 
     n_samples = len(heights_x)
-    # new
-    max_height_x = 224
-    max_width_x = 224
+    max_height_x = max(heights_x)
+    max_width_x = max(widths_x)
 
     x = torch.zeros(n_samples, 1, max_height_x, max_width_x)
     x_mask = torch.ones(n_samples, max_height_x, max_width_x, dtype=torch.bool)
