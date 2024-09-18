@@ -9,7 +9,7 @@ import torch
 import torch.nn as nn
 import torch.utils.checkpoint as checkpoint
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
-
+import numpy as np
 try:
     import os, sys
 
@@ -600,6 +600,16 @@ class SwinTransformer(nn.Module):
         x = self.forward_features(x)
         mask = mask[:, 0::4, 0::4][:, 0::2, 0::2][:, 0::2, 0::2][:, 0::2, 0::2]
         x = self.head(x)
+
+        #====
+        b, l, c = x.shape
+        w_h = np.sqrt(l)
+        w_h = int(w_h)
+        feature = torch.reshape(x, (b, w_h, w_h, c))
+        mask = torch.reshape(mask, (b, w_h, w_h))
+        #=====
+
+
         return x, mask
 
     def flops(self):

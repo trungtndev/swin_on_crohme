@@ -75,13 +75,6 @@ class SwinARM(pl.LightningModule):
             [2b, l, vocab_size]
         """
         feature, mask = self.encoder(img, img_mask)  # [b, t, d]
-        #=====
-        b, l, c = feature.shape
-        w_h = np.sqrt(l)
-        w_h = int(w_h)
-        feature = torch.reshape(feature, (b, w_h, w_h, c))
-        mask = torch.reshape(mask, (b, w_h, w_h))
-        #====
         feature = torch.cat((feature, feature), dim=0)  # [2b, t, d]
         mask = torch.cat((mask, mask), dim=0)
 
