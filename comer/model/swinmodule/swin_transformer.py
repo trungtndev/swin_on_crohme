@@ -605,7 +605,7 @@ class SwinTransformer(nn.Module):
         b, l, c = x.shape
         w_h = np.sqrt(l)
         w_h = int(w_h)
-        feature = torch.reshape(x, (b, w_h, w_h, c))
+        x = torch.reshape(x, (b, w_h, w_h, c))
         mask = torch.reshape(mask, (b, w_h, w_h))
         #=====
 

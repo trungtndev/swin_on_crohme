@@ -8,7 +8,7 @@ from torch import FloatTensor, LongTensor
 from comer.utils.utils import Hypothesis
 
 from .decoder import Decoder
-from .encoder import Encoder
+# from .encoder import Encoder
 
 from .swinmodule.swin_transformer import SwinTransformer
 
