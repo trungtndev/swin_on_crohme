@@ -129,10 +129,13 @@ def collate_fn(batch):
     images_x = batch[1]
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
+    images_x = [s.resize(224,224) for s in images_x]
+
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
 
     n_samples = len(heights_x)
+    # new
     max_height_x = 224
     max_width_x = 224
 
