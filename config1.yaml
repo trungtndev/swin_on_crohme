@@ -12,10 +12,10 @@ trainer:
         mode: max
         filename: '{epoch}-{step}-{val_ExpRate:.4f}'
   # gpus: 1
-  gpus: 0 # 1, 2, 3
+  gpus: 2 # 1, 2, 3
   accelerator: ddp
   check_val_every_n_epoch: 2
-  max_epochs: 100
+  max_epochs: 300
   deterministic: true
 
 
@@ -49,7 +49,7 @@ model:
 data:
   zipfile_path: data.zip
   test_year: "2014"
-  train_batch_size: 1
-  eval_batch_size: 1
-  num_workers: 5
-  scale_aug: true
+  train_batch_size: 8
+  eval_batch_size: 4
+  num_workers: 4
+  scale_aug: false
