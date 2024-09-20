@@ -601,14 +601,13 @@ class SwinTransformer(nn.Module):
         mask = mask[:, 0::4, 0::4][:, 0::2, 0::2][:, 0::2, 0::2][:, 0::2, 0::2]
         x = self.head(x)
 
-        #====
+        #=========================
         b, l, c = x.shape
         w_h = np.sqrt(l)
         w_h = int(w_h)
         x = torch.reshape(x, (b, w_h, w_h, c))
         mask = torch.reshape(mask, (b, w_h, w_h))
-        #=====
-
+        #==========================
 
         return x, mask
 

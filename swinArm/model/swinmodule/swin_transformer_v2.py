@@ -526,7 +526,7 @@ class SwinTransformerV2(nn.Module):
         pretrained_window_sizes (tuple(int)): Pretrained window sizes of each layer.
     """
 
-    def __init__(self, img_size=224, patch_size=4, in_chans=3, num_classes=1000,
+    def __init__(self, img_size=224, patch_size=4, in_chans=3, d_model=256,
                  embed_dim=96, depths=[2, 2, 6, 2], num_heads=[3, 6, 12, 24],
                  window_size=7, mlp_ratio=4., qkv_bias=True,
                  drop_rate=0., attn_drop_rate=0., drop_path_rate=0.1,
@@ -534,7 +534,7 @@ class SwinTransformerV2(nn.Module):
                  use_checkpoint=False, pretrained_window_sizes=[0, 0, 0, 0], **kwargs):
         super().__init__()
 
-        self.num_classes = num_classes
+        self.d_model = d_model
         self.num_layers = len(depths)
         self.embed_dim = embed_dim
         self.ape = ape
@@ -581,7 +581,7 @@ class SwinTransformerV2(nn.Module):
 
         self.norm = norm_layer(self.num_features)
         self.avgpool = nn.AdaptiveAvgPool1d(1)
-        self.head = nn.Linear(self.num_features, num_classes) if num_classes > 0 else nn.Identity()
+        self.head = nn.Linear(self.num_features, d_model)
 
         self.apply(self._init_weights)
         for bly in self.layers:
@@ -618,9 +618,19 @@ class SwinTransformerV2(nn.Module):
         x = torch.flatten(x, 1)
         return x
 
-    def forward(self, x):
+    def forward(self, x, mask):
         x = self.forward_features(x)
+        mask = mask[:, 0::4, 0::4][:, 0::2, 0::2][:, 0::2, 0::2][:, 0::2, 0::2]
         x = self.head(x)
+
+        #=========================
+        b, l, c = x.shape
+        w_h = np.sqrt(l)
+        w_h = int(w_h)
+        x = torch.reshape(x, (b, w_h, w_h, c))
+        mask = torch.reshape(mask, (b, w_h, w_h))
+        #==========================
+
         return x
 
     def flops(self):
