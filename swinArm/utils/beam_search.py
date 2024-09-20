@@ -1,7 +1,7 @@
 from typing import List, Tuple
 
 import torch
-from comer.datamodule import vocab
+from swinArm.datamodule import vocab
 from torch import FloatTensor, LongTensor
 
 

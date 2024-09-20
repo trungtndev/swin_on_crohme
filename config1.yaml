@@ -15,7 +15,7 @@ trainer:
   gpus: 2 # 1, 2, 3
   accelerator: ddp
   check_val_every_n_epoch: 5 # 5
-  max_epochs: 300
+  max_epochs: 200
   deterministic: true
 
 
@@ -25,9 +25,9 @@ model:
   # encoder
   img_size: 224
   in_chans: 1
-  embed_dim: 96
+  embed_dim: 128
   depth: [ 2, 2, 18, 2 ]
-  num_heads: [ 6, 12, 24, 48 ]
+  num_heads: [ 4, 8, 16, 32 ]
   window_size: 7
   # decoder
   nhead: 8
@@ -45,7 +45,7 @@ model:
   temperature: 1.0
   # training
   learning_rate: 0.08
-  patience: 20
+  patience: 2
 data:
   zipfile_path: data.zip
   test_year: "2014"

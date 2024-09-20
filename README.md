@@ -9,7 +9,7 @@
 ## Project structure
 ```bash
 ├── README.md
-├── comer               # model definition folder
+├── swinArm               # model definition folder
 ├── convert2symLG       # official tool to convert latex to symLG format
 ├── lgeval              # official tool to compare symLGs in two folder
 ├── config.yaml         # config for CoMER hyperparameter

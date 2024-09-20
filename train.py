@@ -1,8 +1,8 @@
 from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 from pytorch_lightning.utilities.cli import LightningCLI
 
-from comer.datamodule import CROHMEDatamodule
-from comer.lit_comer import LitCoMER
+from swinArm.datamodule import CROHMEDatamodule
+from swinArm.lit_comer import LitCoMER
 
 cli = LightningCLI(
     LitCoMER,

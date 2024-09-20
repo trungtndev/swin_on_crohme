@@ -1,21 +1,29 @@
 from typing import List
 
+import numpy as np
 import pytorch_lightning as pl
 import torch
 from torch import FloatTensor, LongTensor
 
-from comer.utils.utils import Hypothesis
+from swinArm.utils.utils import Hypothesis
 
 from .decoder import Decoder
-from .encoder import Encoder
+# from .encoder import Encoder
 
+from .swinmodule.swin_transformer import SwinTransformer
 
-class CoMER(pl.LightningModule):
+class SwinARM(pl.LightningModule):
     def __init__(
         self,
         d_model: int,
-        growth_rate: int,
-        num_layers: int,
+
+        img_size:int,
+        in_chans:int,
+        embed_dim: int,
+        depth: List[int],
+        num_heads: List[int],
+        window_size: int,
+
         nhead: int,
         num_decoder_layers: int,
         dim_feedforward: int,
@@ -26,9 +34,16 @@ class CoMER(pl.LightningModule):
     ):
         super().__init__()
 
-        self.encoder = Encoder(
-            d_model=d_model, growth_rate=growth_rate, num_layers=num_layers
+        self.encoder = SwinTransformer(
+            img_size=img_size,
+            in_chans=in_chans,
+            embed_dim=embed_dim,
+            depth=depth,
+            num_heads=num_heads,
+            window_size=window_size,
+            d_model=d_model
         )
+
         self.decoder = Decoder(
             d_model=d_model,
             nhead=nhead,

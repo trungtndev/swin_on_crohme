@@ -5,25 +5,19 @@ import pytorch_lightning as pl
 import torch.optim as optim
 from torch import FloatTensor, LongTensor
 
-from comer.datamodule import Batch, vocab
-from comer.model.swinArm import SwinARM
-from comer.utils.utils import (ExpRateRecorder, Hypothesis, ce_loss,
-                               to_bi_tgt_out)
+from swinArm.datamodule import Batch, vocab
+from swinArm.model.comer import CoMER
+from swinArm.utils.utils import (ExpRateRecorder, Hypothesis, ce_loss,
+                                 to_bi_tgt_out)
 
 
-class LitSwinARM(pl.LightningModule):
+class LitCoMER(pl.LightningModule):
     def __init__(
         self,
         d_model: int,
         # encoder
-        img_size: int,
-        in_chans: int,
-        embed_dim: int,
-        depth: List[int],
-        num_heads: List[int],
-        window_size: int,
-
-
+        growth_rate: int,
+        num_layers: int,
         # decoder
         nhead: int,
         num_decoder_layers: int,
@@ -45,16 +39,10 @@ class LitSwinARM(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
 
-        self.model = SwinARM(
+        self.comer_model = CoMER(
             d_model=d_model,
-            #====
-            img_size=img_size,
-            in_chans=in_chans,
-            embed_dim=embed_dim,
-            depth=depth,
-            num_heads=num_heads,
-            window_size=window_size,
-            #=======
+            growth_rate=growth_rate,
+            num_layers=num_layers,
             nhead=nhead,
             num_decoder_layers=num_decoder_layers,
             dim_feedforward=dim_feedforward,
@@ -85,7 +73,7 @@ class LitSwinARM(pl.LightningModule):
         FloatTensor
             [2b, l, vocab_size]
         """
-        return self.model(img, img_mask, tgt)
+        return self.comer_model(img, img_mask, tgt)
 
     def training_step(self, batch: Batch, _):
         tgt, out = to_bi_tgt_out(batch.indices, self.device)
@@ -140,7 +128,7 @@ class LitSwinARM(pl.LightningModule):
     def approximate_joint_search(
         self, img: FloatTensor, mask: LongTensor
     ) -> List[Hypothesis]:
-        return self.model.beam_search(img, mask, **self.hparams)
+        return self.comer_model.beam_search(img, mask, **self.hparams)
 
     def configure_optimizers(self):
         optimizer = optim.SGD(
