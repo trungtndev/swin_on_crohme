@@ -8,9 +8,9 @@ from torch import FloatTensor, LongTensor
 from swinArm.utils.utils import Hypothesis
 
 from .decoder import Decoder
-# from .encoder import Encoder
 
-from .swinmodule.swin_transformer import SwinTransformer
+from .swinv1encoder import SwinV1Encoder
+
 
 class SwinARM(pl.LightningModule):
     def __init__(
@@ -34,7 +34,7 @@ class SwinARM(pl.LightningModule):
     ):
         super().__init__()
 
-        self.encoder = SwinTransformer(
+        self.encoder = SwinV1Encoder(
             img_size=img_size,
             in_chans=in_chans,
             embed_dim=embed_dim,
