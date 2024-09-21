@@ -41,7 +41,8 @@ class SwinARM(pl.LightningModule):
             depth=depth,
             num_heads=num_heads,
             window_size=window_size,
-            d_model=d_model
+            d_model=d_model,
+            drop_rate=dropout
         )
 
         self.decoder = Decoder(
