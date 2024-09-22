@@ -15,7 +15,7 @@ trainer:
   gpus: 2 # 1, 2, 3
   accelerator: ddp
   check_val_every_n_epoch: 5 # 5
-  max_epochs: 200
+  max_epochs: 50
   deterministic: true
 
 
@@ -41,7 +41,7 @@ model:
   temperature: 1.0
   # training
   learning_rate: 0.08
-  patience: 2
+  patience: 4
 data:
   zipfile_path: data.zip
   test_year: "2014"

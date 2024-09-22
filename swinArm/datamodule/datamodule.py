@@ -95,7 +95,7 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
         formula = tmp[1:]
         with archive.open(f"data/{dir_name}/img/{img_name}.bmp", "r") as f:
             # move image to memory immediately, avoid lazy loading, which will lead to None pointer error in loading
-            img = Image.open(f).copy()
+            img = Image.open(f).convert("RGB").copy()
             img = img.resize((224, 224))
         data.append((img_name, img, formula))
 
@@ -137,7 +137,7 @@ def collate_fn(batch):
     max_height_x = max(heights_x)
     max_width_x = max(widths_x)
 
-    x = torch.zeros(n_samples, 1, max_height_x, max_width_x)
+    x = torch.zeros(n_samples, 3, max_height_x, max_width_x)
     x_mask = torch.ones(n_samples, max_height_x, max_width_x, dtype=torch.bool)
     for idx, s_x in enumerate(images_x):
         x[idx, :, : heights_x[idx], : widths_x[idx]] = s_x
