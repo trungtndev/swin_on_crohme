@@ -6,6 +6,14 @@ import torch
 from torch import Tensor
 
 
+from torchvision import transforms
+swinTransform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])
+])
+
+
 class ScaleToLimitRange:
     def __init__(self, w_lo: int, w_hi: int, h_lo: int, h_hi: int) -> None:
         assert w_lo <= w_hi and h_lo <= h_hi
