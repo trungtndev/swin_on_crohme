@@ -4,14 +4,15 @@ import timm
 
 class SwinV1Encoder(pl.LightningModule):
     def __init__(self,
-                 d_model:int):
+                 d_model:int,
+                 requires_grad):
         super().__init__()
         model = timm.create_model(
             "swin_tiny_patch4_window7_224",
             pretrained=True,
             )
         for param in model.parameters():
-            param.requires_grad = False
+            param.requires_grad = requires_grad
 
         model.head = torch.nn.Linear(768, d_model)
 

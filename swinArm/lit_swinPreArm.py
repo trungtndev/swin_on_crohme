@@ -15,7 +15,7 @@ class LitSwinPreARM(pl.LightningModule):
     def __init__(
         self,
         d_model: int,
-
+        requires_grad,
         # decoder
         nhead: int,
         num_decoder_layers: int,
