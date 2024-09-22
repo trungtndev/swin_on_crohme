@@ -24,7 +24,6 @@ class CROHMEDataset(Dataset):
             trans_list.append(ScaleAugmentation(K_MIN, K_MAX))
 
         trans_list += [
-            tr.Resize((224, 224)),
             tr.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225]),
             # ScaleToLimitRange(w_lo=W_LO, w_hi=W_HI, h_lo=H_LO, h_hi=H_HI),
