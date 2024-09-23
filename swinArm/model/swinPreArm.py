@@ -15,7 +15,13 @@ class SwinPreARM(pl.LightningModule):
     def __init__(
         self,
         d_model: int,
+        # encoder
         requires_grad,
+        drop_rate,
+        proj_drop_rate,
+        attn_drop_rate,
+        drop_path_rate,
+        # decoder
         nhead: int,
         num_decoder_layers: int,
         dim_feedforward: int,
@@ -29,6 +35,10 @@ class SwinPreARM(pl.LightningModule):
         self.encoder = SwinV1Encoder(
             d_model=d_model,
             requires_grad=requires_grad,
+            drop_rate=drop_rate,
+            proj_drop_rate=proj_drop_rate,
+            attn_drop_rate=attn_drop_rate,
+            drop_path_rate=drop_path_rate,
         )
 
         self.decoder = Decoder(

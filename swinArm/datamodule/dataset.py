@@ -2,7 +2,7 @@ import torchvision.transforms as tr
 from torch.utils.data.dataset import Dataset
 
 from .transforms import (ScaleAugmentation,
-                         # ScaleToLimitRange,
+                         ScaleToLimitRange,
                          swinTransform)
 
 K_MIN = 0.7
