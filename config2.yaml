@@ -10,7 +10,7 @@ trainer:
         save_top_k: 1
         monitor: val_ExpRate
         mode: max
-        filename: '{epoch}-{step}-{val_ExpRate:.4f}'
+        filename: '{epoch}-{val_loss}-{step}-{val_ExpRate:.4f}'
   # gpus: 1
   gpus: 2 # 1, 2, 3
   accelerator: ddp
@@ -23,7 +23,7 @@ trainer:
 model:
   d_model: 256
   #encoder
-  requires_grad: false
+  requires_grad: true
   drop_rate: 0.
   proj_drop_rate: 0.
   attn_drop_rate: 0.
