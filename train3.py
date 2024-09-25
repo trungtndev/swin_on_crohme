@@ -1,7 +1,7 @@
 import argparse
 import os
 import wandb
-from lightning.pytorch.loggers import WandbLogger as Logger
+from pytorch_lightning.loggers import WandbLogger as Logger
 from swinArm.datamodule import CROHMEDatamodule
 from swinArm.lit_swinPreArm import LitSwinPreARM
 from sconf import Config
