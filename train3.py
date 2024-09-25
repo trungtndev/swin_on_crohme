@@ -6,6 +6,7 @@ from swinArm.datamodule import CROHMEDatamodule
 from swinArm.lit_swinPreArm import LitSwinPreARM
 from sconf import Config
 import pytorch_lightning as pl
+from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 
 def train(config):
     pl.seed_everything(config.seed_everything, workers=True)
@@ -63,12 +64,14 @@ def train(config):
     
 
     trainer = pl.Trainer(
-        devices=config.trainer.gpus,
+        gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
         max_epochs=config.trainer.max_epochs,
-        logger=logger,
         deterministic=config.trainer.deterministic,
+
+        plugins=DDPPlugin(find_unused_parameters=False),
+        logger=logger,
         callbacks = [lr_callback, checkpoint_callback],
     )
 
