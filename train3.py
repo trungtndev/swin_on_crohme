@@ -45,7 +45,7 @@ def train(config):
         num_workers = config.data.num_workers,
         scale_aug = config.data.scale_aug,)
     
-    logger = Logger(config.exp_name, project="CoMER", config=dict(config), log_model='all')
+    logger = Logger("test CoMER", project="CoMER", config=dict(config), log_model='all')
     logger.watch(model_module.model, log="all", log_freq=100)
 
     lr_callback = pl.callbacks.LearningRateMonitor(logging_interval=config.trainer.callbacks[0].init_args.logging_interval)
