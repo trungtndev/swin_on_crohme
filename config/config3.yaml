@@ -21,8 +21,8 @@ trainer:
   deterministic: true
 
 wandb:
-  name: "test CoMER"
-  project: "CoMER"
+  name: "..."
+  project: "SwinARM"
   log_model: "all"
 
 
@@ -30,10 +30,10 @@ model:
   d_model: 256
   #encoder
   requires_grad: true
-  drop_rate: 0.
-  proj_drop_rate: 0.
-  attn_drop_rate: 0.
-  drop_path_rate: 0.1
+  drop_rate: 0.3
+  proj_drop_rate: 0.1
+  attn_drop_rate: 0.3
+  drop_path_rate: 0.4
   # decoder
   nhead: 8
   num_decoder_layers: 3
