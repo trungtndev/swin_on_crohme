@@ -66,6 +66,8 @@ def train(config):
     
 
     trainer = pl.Trainer(
+        devices=config.trainer.devices,
+        tpu_cores=config.trainer.tpu_cores,
         gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
