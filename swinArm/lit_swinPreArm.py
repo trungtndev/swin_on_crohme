@@ -61,6 +61,7 @@ class LitSwinPreARM(pl.LightningModule):
         )
 
         self.exprate_recorder = ExpRateRecorder()
+        self.save_hyperparameters()
 
     def forward(
         self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor

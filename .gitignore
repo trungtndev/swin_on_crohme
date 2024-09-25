@@ -1,3 +1,6 @@
 swinArm/model/swin_model
 test.ipynb
 lightning_logs/*
+
+**/**/__pycache__
+**/**/__pycache__/*
