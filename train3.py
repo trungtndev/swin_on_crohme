@@ -47,13 +47,15 @@ def train(config):
         scale_aug = config.data.scale_aug,
     )
     
-    logger = Logger("test CoMER",
-                    project="CoMER",
+    logger = Logger(name=config.wandb.name,
+                    project=config.wandb.project,
+                    log_model=config.wandb.log_model,
                     config=dict(config),
-                    log_model='all')
+                    )
     logger.watch(model_module,
                  log="all",
-                 log_freq=100)
+                 log_freq=100
+                 )
 
     lr_callback = pl.callbacks.LearningRateMonitor(logging_interval=config.trainer.callbacks[0].init_args.logging_interval)
 

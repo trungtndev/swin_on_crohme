@@ -18,6 +18,10 @@ trainer:
   max_epochs: 50
   deterministic: true
 
+wandb:
+  name: "test CoMER"
+  project: "CoMER"
+  log_model: "all"
 
 
 model:
