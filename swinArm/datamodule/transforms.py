@@ -5,13 +5,19 @@ import numpy as np
 import torch
 from torch import Tensor
 
-
 from torchvision import transforms
-swinTransform = transforms.Compose([
-    transforms.Resize((224, 224)),
+
+swinTransform = [
+    transforms.ToTensor(),
+    # swin pretrain model uses this normalization
     transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225])
-])
+                         std=[0.229, 0.224, 0.225]),
+    transforms.RandomAffine(degrees=10,
+                            translate=(0.1, 0.1),
+                            scale=(0.9, 1.1),
+                            shear=10),
+    transforms.Resize((224, 224)),
+]
 
 
 class ScaleToLimitRange:
