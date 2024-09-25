@@ -8,7 +8,7 @@ from swinArm.utils.utils import Hypothesis
 
 from .decoder import Decoder
 
-from .swinv1pretrainencoder import SwinV1Encoder
+from .swinPreEncoder import SwinV1Encoder
 
 
 class SwinPreARM(pl.LightningModule):

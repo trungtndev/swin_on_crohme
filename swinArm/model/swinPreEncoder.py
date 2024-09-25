@@ -24,14 +24,20 @@ class SwinV1Encoder(pl.LightningModule):
         swin_state_dict = timm.create_model(
             "swin_tiny_patch4_window7_224",
             pretrained=True,
-            ).state_dict()
+        ).state_dict()
 
         self.swinv1.load_state_dict(swin_state_dict)
 
         for param in self.swinv1.parameters():
             param.requires_grad = requires_grad
 
-        self.swinv1.head = torch.nn.Linear(768, d_model)
+        # add output layer
+        self.swinv1.head = torch.nn.Sequential(
+            torch.nn.Linear(768, d_model),
+            torch.nn.LayerNorm(d_model),
+            torch.nn.ReLU(),
+            torch.nn.Dropout(drop_rate),
+        )
 
     def forward(self, img, img_mask):
         x = self.swinv1(img)
