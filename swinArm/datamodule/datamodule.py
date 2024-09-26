@@ -156,6 +156,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
     def __init__(
         self,
         zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data.zip",
+        dataset_name: str = "crohme",
         test_year: str = "2014",
         train_batch_size: int = 8,
         eval_batch_size: int = 4,
@@ -165,6 +166,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
         super().__init__()
         assert isinstance(test_year, str)
         self.zipfile_path = zipfile_path
+        self.dataset_name = dataset_name
         self.test_year = test_year
         self.train_batch_size = train_batch_size
         self.eval_batch_size = eval_batch_size
@@ -177,18 +179,18 @@ class CROHMEDatamodule(pl.LightningDataModule):
         with ZipFile(self.zipfile_path) as archive:
             if stage == "fit" or stage is None:
                 self.train_dataset = CROHMEDataset(
-                    build_dataset(archive, "train", self.train_batch_size),
+                    build_dataset(archive, f"{self.dataset_name}/train", self.train_batch_size),
                     True,
                     self.scale_aug,
                 )
                 self.val_dataset = CROHMEDataset(
-                    build_dataset(archive, self.test_year, self.eval_batch_size),
+                    build_dataset(archive, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
                     False,
                     self.scale_aug,
                 )
             if stage == "test" or stage is None:
                 self.test_dataset = CROHMEDataset(
-                    build_dataset(archive, self.test_year, self.eval_batch_size),
+                    build_dataset(archive, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
                     False,
                     self.scale_aug,
                 )

@@ -5,19 +5,19 @@ import numpy as np
 import torch
 from torch import Tensor
 
-from torchvision import transforms
+from torchvision import transforms as tr
 
-swinTransform = [
-    transforms.ToTensor(),
-    # swin pretrain model uses this normalization
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225]),
-    transforms.RandomAffine(degrees=10,
-                            translate=(0.1, 0.1),
-                            scale=(0.9, 1.1),
-                            shear=10),
-    transforms.Resize((224, 224)),
-]
+#data augmentation
+augmentation_options = tr.RandomChoice([
+    tr.RandomRotation(degrees=2),
+    tr.RandomRotation(degrees=10),
+    tr.RandomRotation(degrees=8),
+    tr.RandomRotation(degrees=15),
+    tr.RandomAffine(degrees=5, translate=(0.3, 0.3), scale=(0.7, 1.3), shear=5),
+    tr.RandomAffine(degrees=10, translate=(0.1, 0.1), scale=(0.9, 1.1), shear=10),
+    tr.RandomAffine(degrees=15, translate=(0.4, 0.4), scale=(0.6, 1.4), shear=25),
+    tr.RandomAffine(degrees=20, translate=(0.2, 0.2), scale=(0.8, 1.2), shear=15),
+])
 
 
 class ScaleToLimitRange:
