@@ -10,6 +10,7 @@ from swinArm.datamodule.dataset import CROHMEDataset
 from PIL import Image
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
+import tqdm
 
 from .vocab import vocab
 
@@ -90,7 +91,7 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
     with open(f"{archive}/{dir_name}/caption.txt", "r") as f:
         captions = f.readlines()
     data = []
-    for line in captions:
+    for line in tqdm.tqdm(captions):
         tmp = line.strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
