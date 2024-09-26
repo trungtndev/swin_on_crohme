@@ -11,7 +11,7 @@ from PIL import Image
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
 import tqdm
-
+import gc
 from .vocab import vocab
 
 Data = List[Tuple[str, Image.Image, List[str]]]
@@ -102,7 +102,7 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
-
+    gc.collect()
     return data
 
 
