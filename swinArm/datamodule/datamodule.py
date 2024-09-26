@@ -94,6 +94,8 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
         tmp = line.strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
+
+        img_name = img_name.split(".")[0]
         img = Image.open(f"{archive}/{dir_name}/img/{img_name}.bmp").convert("RGB").copy()
         img = img.resize((224, 224))
         data.append((img_name, img, formula))
