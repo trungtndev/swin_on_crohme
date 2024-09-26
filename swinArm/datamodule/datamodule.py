@@ -17,13 +17,14 @@ Data = List[Tuple[str, Image.Image, List[str]]]
 
 MAX_SIZE = 32e4  # change here accroading to your GPU memory
 
+
 # load data
 def data_iterator(
-    data: Data,
-    batch_size: int,
-    batch_Imagesize: int = MAX_SIZE,
-    maxlen: int = 200,
-    maxImagesize: int = MAX_SIZE,
+        data: Data,
+        batch_size: int,
+        batch_Imagesize: int = MAX_SIZE,
+        maxlen: int = 200,
+        maxImagesize: int = MAX_SIZE,
 ):
     fname_batch = []
     feature_batch = []
@@ -86,17 +87,15 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
     Returns:
         Data: list of tuple of image and formula
     """
-    with archive.open(f"data/{dir_name}/caption.txt", "r") as f:
+    with open(f"{archive}/{dir_name}/caption.txt", "r") as f:
         captions = f.readlines()
     data = []
     for line in captions:
-        tmp = line.decode().strip().split()
+        tmp = line.strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
-        with archive.open(f"data/{dir_name}/img/{img_name}.bmp", "r") as f:
-            # move image to memory immediately, avoid lazy loading, which will lead to None pointer error in loading
-            img = Image.open(f).convert("RGB").copy()
-            img = img.resize((224, 224))
+        img = Image.open(f"{archive}/{dir_name}/img/{img_name}.bmp").convert("RGB").copy()
+        img = img.resize((224, 224))
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
@@ -154,14 +153,14 @@ def build_dataset(archive, folder: str, batch_size: int):
 
 class CROHMEDatamodule(pl.LightningDataModule):
     def __init__(
-        self,
-        zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data.zip",
-        dataset_name: str = "crohme",
-        test_year: str = "2014",
-        train_batch_size: int = 8,
-        eval_batch_size: int = 4,
-        num_workers: int = 5,
-        scale_aug: bool = False,
+            self,
+            zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data.zip",
+            dataset_name: str = "hme",
+            test_year: str = "2014",
+            train_batch_size: int = 8,
+            eval_batch_size: int = 4,
+            num_workers: int = 5,
+            scale_aug: bool = False,
     ) -> None:
         super().__init__()
         assert isinstance(test_year, str)
@@ -176,24 +175,23 @@ class CROHMEDatamodule(pl.LightningDataModule):
         print(f"Load data from: {self.zipfile_path}")
 
     def setup(self, stage: Optional[str] = None) -> None:
-        with ZipFile(self.zipfile_path) as archive:
-            if stage == "fit" or stage is None:
-                self.train_dataset = CROHMEDataset(
-                    build_dataset(archive, f"{self.dataset_name}/train", self.train_batch_size),
-                    True,
-                    self.scale_aug,
-                )
-                self.val_dataset = CROHMEDataset(
-                    build_dataset(archive, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
-                    False,
-                    self.scale_aug,
-                )
-            if stage == "test" or stage is None:
-                self.test_dataset = CROHMEDataset(
-                    build_dataset(archive, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
-                    False,
-                    self.scale_aug,
-                )
+        if stage == "fit" or stage is None:
+            self.train_dataset = CROHMEDataset(
+                build_dataset(self.zipfile_path, f"{self.dataset_name}/train", self.train_batch_size),
+                True,
+                self.scale_aug,
+            )
+            self.val_dataset = CROHMEDataset(
+                build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
+                False,
+                self.scale_aug,
+            )
+        if stage == "test" or stage is None:
+            self.test_dataset = CROHMEDataset(
+                build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
+                False,
+                self.scale_aug,
+            )
 
     def train_dataloader(self):
         return DataLoader(
