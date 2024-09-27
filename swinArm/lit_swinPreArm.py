@@ -98,12 +98,12 @@ class LitSwinPreARM(pl.LightningModule):
         hyps = self.approximate_joint_search(batch.imgs, batch.mask)
 
         self.exprate_recorder([h.seq for h in hyps], batch.indices)
-        self.log(
-            "train_ExpRate", self.exprate_recorder,
-            prog_bar=True,
-            on_step=False,
-            on_epoch=True,
-        )
+        # self.log(
+        #     "train_ExpRate", self.exprate_recorder,
+        #     prog_bar=True,
+        #     on_step=False,
+        #     on_epoch=True,
+        # )
 
         return loss
 
