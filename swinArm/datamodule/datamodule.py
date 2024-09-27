@@ -202,7 +202,6 @@ class CROHMEDatamodule(pl.LightningDataModule):
             shuffle=True,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
-            pin_memory=True,
         )
 
     def val_dataloader(self):
