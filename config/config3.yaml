@@ -16,7 +16,7 @@ trainer:
   accelerator: ddp
   tpu_cores: null
   devices: null
-  check_val_every_n_epoch: 5 # 5
+  check_val_every_n_epoch: 4 # 5
   max_epochs: 50
   deterministic: true
 
@@ -50,10 +50,10 @@ model:
   temperature: 1.0
   # training
   learning_rate: 0.0085
-  patience: 4
+  patience: 12
 data:
   zipfile_path: data.zip
-  dataset_name: "hme"
+  dataset_name: "crohme"
   test_year: "test"
   train_batch_size: 8
   eval_batch_size: 4
