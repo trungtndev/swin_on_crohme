@@ -13,32 +13,32 @@ from swinArm.utils.utils import (ExpRateRecorder, Hypothesis, ce_loss,
 
 class LitSwinPreARM(pl.LightningModule):
     def __init__(
-        self,
-        d_model: int,
-        # encoder
-        requires_grad: bool,
-        drop_rate,
-        proj_drop_rate,
-        attn_drop_rate,
-        drop_path_rate,
+            self,
+            d_model: int,
+            # encoder
+            requires_grad: bool,
+            drop_rate,
+            proj_drop_rate,
+            attn_drop_rate,
+            drop_path_rate,
 
-        # decoder
-        nhead: int,
-        num_decoder_layers: int,
-        dim_feedforward: int,
-        dropout: float,
-        dc: int,
-        cross_coverage: bool,
-        self_coverage: bool,
-        # beam search
-        beam_size: int,
-        max_len: int,
-        alpha: float,
-        early_stopping: bool,
-        temperature: float,
-        # training
-        learning_rate: float,
-        patience: int,
+            # decoder
+            nhead: int,
+            num_decoder_layers: int,
+            dim_feedforward: int,
+            dropout: float,
+            dc: int,
+            cross_coverage: bool,
+            self_coverage: bool,
+            # beam search
+            beam_size: int,
+            max_len: int,
+            alpha: float,
+            early_stopping: bool,
+            temperature: float,
+            # training
+            learning_rate: float,
+            patience: int,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -50,7 +50,7 @@ class LitSwinPreARM(pl.LightningModule):
             proj_drop_rate=proj_drop_rate,
             attn_drop_rate=attn_drop_rate,
             drop_path_rate=drop_path_rate,
-            #=======
+            # =======
             nhead=nhead,
             num_decoder_layers=num_decoder_layers,
             dim_feedforward=dim_feedforward,
@@ -64,7 +64,7 @@ class LitSwinPreARM(pl.LightningModule):
         self.save_hyperparameters()
 
     def forward(
-        self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor
+            self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor
     ) -> FloatTensor:
         """run img and bi-tgt
 
@@ -89,7 +89,21 @@ class LitSwinPreARM(pl.LightningModule):
         out_hat = self(batch.imgs, batch.mask, tgt)
 
         loss = ce_loss(out_hat, out)
-        self.log("train_loss", loss, on_step=False, on_epoch=True, sync_dist=True)
+        self.log(
+            "train_loss", loss,
+            on_step=False,
+            on_epoch=True,
+            sync_dist=True)
+
+        hyps = self.approximate_joint_search(batch.imgs, batch.mask)
+
+        self.exprate_recorder([h.seq for h in hyps], batch.indices)
+        self.log(
+            "train_ExpRate", self.exprate_recorder,
+            prog_bar=True,
+            on_step=False,
+            on_epoch=True,
+        )
 
         return loss
 
@@ -99,8 +113,7 @@ class LitSwinPreARM(pl.LightningModule):
 
         loss = ce_loss(out_hat, out)
         self.log(
-            "val_loss",
-            loss,
+            "val_loss", loss,
             on_step=False,
             on_epoch=True,
             prog_bar=True,
@@ -111,8 +124,7 @@ class LitSwinPreARM(pl.LightningModule):
 
         self.exprate_recorder([h.seq for h in hyps], batch.indices)
         self.log(
-            "val_ExpRate",
-            self.exprate_recorder,
+            "val_ExpRate", self.exprate_recorder,
             prog_bar=True,
             on_step=False,
             on_epoch=True,
@@ -135,7 +147,7 @@ class LitSwinPreARM(pl.LightningModule):
                         f.write(content)
 
     def approximate_joint_search(
-        self, img: FloatTensor, mask: LongTensor
+            self, img: FloatTensor, mask: LongTensor
     ) -> List[Hypothesis]:
         return self.model.beam_search(img, mask, **self.hparams)
 

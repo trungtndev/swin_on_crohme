@@ -101,7 +101,7 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
         img = img.resize((224, 224))
         data.append((img_name, img, formula))
 
-    print(f"Extract data from: {dir_name}, with data size: {len(data)}")
+    print(f"Extract data from: {dir_name}/{archive}, with data size: {len(data)}")
     gc.collect()
     return data
 
@@ -158,7 +158,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
     def __init__(
             self,
             zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data.zip",
-            dataset_name: str = "hme",
+            dataset_name: str = "",
             test_year: str = "2014",
             train_batch_size: int = 8,
             eval_batch_size: int = 4,
