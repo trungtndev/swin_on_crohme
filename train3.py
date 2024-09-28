@@ -8,6 +8,7 @@ from sconf import Config
 import pytorch_lightning as pl
 from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 
+
 def train(config):
     pl.seed_everything(config.seed_everything, workers=True)
 
@@ -61,10 +62,12 @@ def train(config):
     lr_callback = pl.callbacks.LearningRateMonitor(
         logging_interval=config.trainer.callbacks[0].init_args.logging_interval)
 
-    checkpoint_callback = pl.callbacks.ModelCheckpoint(save_top_k=config.trainer.callbacks[1].init_args.save_top_k,
-                                                       monitor=config.trainer.callbacks[1].init_args.monitor,
-                                                       mode=config.trainer.callbacks[1].init_args.mode,
-                                                       filename=config.trainer.callbacks[1].init_args.filename)
+    checkpoint_callback = pl.callbacks.ModelCheckpoint(
+        dirpath="lightning_logs",
+        save_top_k=config.trainer.callbacks[1].init_args.save_top_k,
+        monitor=config.trainer.callbacks[1].init_args.monitor,
+        mode=config.trainer.callbacks[1].init_args.mode,
+        filename=config.trainer.callbacks[1].init_args.filename)
 
     trainer = pl.Trainer(
         devices=config.trainer.devices,

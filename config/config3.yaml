@@ -54,7 +54,7 @@ model:
 data:
   zipfile_path: data.zip
   dataset_name: "crohme"
-  test_year: "test"
+  test_year: "2019"
   train_batch_size: 8
   eval_batch_size: 4
   num_workers: 4
