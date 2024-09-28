@@ -17,7 +17,8 @@ from .vocab import vocab
 Data = List[Tuple[str, Image.Image, List[str]]]
 
 MAX_SIZE = 32e4  # change here accroading to your GPU memory
-
+max_n_traing_samples = 40000
+max_n_val_samples = 10000
 
 # load data
 def data_iterator(
@@ -88,6 +89,12 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
     Returns:
         Data: list of tuple of image and formula
     """
+    max_samples = max_n_val_samples
+    type_dataset = dir_name.split("/")[-1] # train, test_2014, test_2016,...
+    if type_dataset == "train":
+        max_samples = max_n_traing_samples
+    count = 0
+
     with open(f"{archive}/{dir_name}/caption.txt", "r") as f:
         captions = f.readlines()
     data = []
@@ -101,6 +108,10 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
             img = Image.open(f).convert("RGB").copy()
             img = img.resize((224, 224))
         data.append((img_name, img, formula))
+
+        if count > max_samples:
+            break
+        count += 1
 
     print(f"Extract data from: {dir_name}/{archive}, with data size: {len(data)}")
     gc.collect()
