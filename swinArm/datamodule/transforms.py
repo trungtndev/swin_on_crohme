@@ -7,16 +7,16 @@ from torch import Tensor
 
 from torchvision import transforms as tr
 
-
-#data augmentation
+# data augmentation
 rand_aug = tr.RandomChoice([
     tr.RandomAffine(degrees=20),
     tr.RandomAffine(degrees=0, scale=(0.8, 1.2)),
     tr.RandomAffine(degrees=0, translate=(0.2, 0.2)),
     tr.RandomAffine(degrees=0, shear=20),
 
-    # tr.RandomAffine(degrees=0, translate=(0.2, 0.2), scale=(0.8, 1.2)),
-    # tr.RandomAffine(degrees=0, scale=(0.8, 1.2), shear=20),
+    tr.RandomAffine(degrees=0, translate=(0.2, 0.2), scale=(0.8, 1.2)),
+    tr.RandomAffine(degrees=0, translate=(0.2, 0.2), shear=20),
+    tr.RandomAffine(degrees=0, scale=(0.8, 1.2), shear=20),
 
     tr.RandomAffine(degrees=20, translate=(0.2, 0.2), scale=(0.8, 1.2), shear=20),
 
