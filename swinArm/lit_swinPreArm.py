@@ -161,7 +161,7 @@ class LitSwinPreARM(pl.LightningModule):
         reduce_scheduler = optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
             mode="max",
-            factor=0.35, # 0.25
+            factor=0.45, # 0.25
             patience=self.hparams.patience // self.trainer.check_val_every_n_epoch,
         )
         scheduler = {
