@@ -26,13 +26,13 @@ class CROHMEDataset(Dataset):
         if is_train and scale_aug:
             trans_list.append(ScaleAugmentation(K_MIN, K_MAX))
 
-        if is_train:
-            trans_list.append(
-                tr.RandomChoice(
-                    [rand_aug,
-                     IdentityTransform(),
-                     ], p=[0.2, 0.8])
-            )
+        # if is_train:
+        #     trans_list.append(
+        #         tr.RandomChoice(
+        #             [rand_aug,
+        #              IdentityTransform(),
+        #              ], p=[0.2, 0.8])
+        #     )
 
         trans_list += [
             tr.Normalize(mean=[0.485, 0.456, 0.406],

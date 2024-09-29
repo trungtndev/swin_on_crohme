@@ -13,19 +13,15 @@ class IdentityTransform:
 
 #data augmentation
 rand_aug = tr.RandomChoice([
-    tr.RandomAffine(degrees=15),
+    tr.RandomAffine(degrees=20),
     tr.RandomAffine(degrees=0, scale=(0.8, 1.2)),
-    tr.RandomAffine(degrees=0, translate=(0.18, 0.18)),
-    tr.RandomAffine(degrees=0, shear=15),
+    tr.RandomAffine(degrees=0, translate=(0.2, 0.2)),
+    tr.RandomAffine(degrees=0, shear=20),
 
-    tr.RandomAffine(degrees=10, scale=(0.9, 1.2)),
-    tr.RandomAffine(degrees=12, translate=(0.15, 0.15)),
+    # tr.RandomAffine(degrees=0, translate=(0.2, 0.2), scale=(0.8, 1.2)),
+    # tr.RandomAffine(degrees=0, scale=(0.8, 1.2), shear=20),
 
-    tr.RandomAffine(degrees=0, translate=(0.11, 0.11), scale=(0.75, 1.2)),
-
-    tr.RandomAffine(degrees=0, translate=(0.12, 0.12), scale=(0.9, 1.2), shear=18),
-
-    tr.RandomAffine(degrees=20, translate=(0.12, 0.12), scale=(0.8, 1.2), shear=10),
+    tr.RandomAffine(degrees=20, translate=(0.2, 0.2), scale=(0.8, 1.2), shear=20),
 
 ])
 
