@@ -1,9 +1,9 @@
 import torchvision.transforms as tr
 from torch.utils.data.dataset import Dataset
+from wandb.wandb_torch import torch
 
 from .transforms import (ScaleAugmentation,
                          ScaleToLimitRange,
-                         IdentityTransform,
                          rand_aug)
 
 K_MIN = 0.7
@@ -30,7 +30,7 @@ class CROHMEDataset(Dataset):
             trans_list.append(
                 tr.RandomChoice(
                     [rand_aug,
-                     IdentityTransform(),
+                     torch.nn.Identity(),
                      ], p=[0.2, 0.8])
             )
 
