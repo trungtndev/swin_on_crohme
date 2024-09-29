@@ -8,7 +8,7 @@ from torch import Tensor
 from torchvision import transforms as tr
 
 #data augmentation
-augmentation_options = tr.RandomChoice([
+rand_aug = tr.RandomChoice([
     tr.RandomRotation(degrees=2),
     tr.RandomRotation(degrees=10),
     tr.RandomRotation(degrees=8),
