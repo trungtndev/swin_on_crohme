@@ -77,6 +77,7 @@ def train(config):
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
         max_epochs=config.trainer.max_epochs,
         deterministic=config.trainer.deterministic,
+        gradient_clip_val=1.0,
 
         plugins=DDPPlugin(find_unused_parameters=False),
         logger=logger,
