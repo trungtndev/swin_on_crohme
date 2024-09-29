@@ -7,6 +7,10 @@ from torch import Tensor
 
 from torchvision import transforms as tr
 
+class IdentityTransform:
+    def __call__(self, img):
+        return img
+
 #data augmentation
 rand_aug = tr.RandomChoice([
     tr.RandomRotation(degrees=2),

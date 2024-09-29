@@ -3,6 +3,7 @@ from torch.utils.data.dataset import Dataset
 
 from .transforms import (ScaleAugmentation,
                          ScaleToLimitRange,
+                         IdentityTransform,
                          rand_aug)
 
 K_MIN = 0.7
@@ -29,7 +30,7 @@ class CROHMEDataset(Dataset):
             trans_list.append(
                 tr.RandomChoice(
                     [rand_aug,
-                     tr.ToTensor(),
+                     IdentityTransform(),
                      ], p=[0.35, 0.65])
             )
 
