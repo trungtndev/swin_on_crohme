@@ -31,7 +31,7 @@ class CROHMEDataset(Dataset):
                 tr.RandomChoice(
                     [rand_aug,
                      IdentityTransform(),
-                     ], p=[0.35, 0.65])
+                     ], p=[0.2, 0.8])
             )
 
         trans_list += [
