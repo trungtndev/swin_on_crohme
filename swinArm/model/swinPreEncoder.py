@@ -27,9 +27,18 @@ class SwinV1Encoder(pl.LightningModule):
         ).state_dict()
 
         self.swinv1.load_state_dict(swin_state_dict)
+
         if requires_grad == False:
-            for param in self.swinv1.parameters():
+            # for param in self.swinv1.parameters():
+            #     param.requires_grad = False
+    # =========freeze the parameters in patch_embed and state 0, 1, 2 swin layers==========
+            for param in self.swinv1.patch_embed.parameters():
                 param.requires_grad = False
+            for i in range(3):
+                for param in self.swinv1.layers[i].parameters():
+                    param.requires_grad = False
+
+
 
         # add output layer
         self.swinv1.head = torch.nn.Sequential(
