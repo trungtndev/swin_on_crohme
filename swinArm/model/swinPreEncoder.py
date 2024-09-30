@@ -29,14 +29,14 @@ class SwinV1Encoder(pl.LightningModule):
         self.swinv1.load_state_dict(swin_state_dict)
 
         if requires_grad == False:
-            # for param in self.swinv1.parameters():
-            #     param.requires_grad = False
-    # =========freeze the parameters in patch_embed and state 0, 1, 2 swin layers==========
-            for param in self.swinv1.patch_embed.parameters():
+            for param in self.swinv1.parameters():
                 param.requires_grad = False
-            for i in range(3):
-                for param in self.swinv1.layers[i].parameters():
-                    param.requires_grad = False
+    # ========= freeze the parameters in patch_embed and state 0, 1, 2 swin layers ==========#
+    #         for param in self.swinv1.patch_embed.parameters():
+    #             param.requires_grad = False
+    #         for i in range(3):
+    #             for param in self.swinv1.layers[i].parameters():
+    #                 param.requires_grad = False
 
 
 
