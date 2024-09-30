@@ -12,7 +12,9 @@ from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 def train(config):
     pl.seed_everything(config.seed_everything, workers=True)
 
-    model_module = LitSwinPreARM.load_from_checkpoint("checkpoint/epoch=51-val_loss=0.35873180627822876-step=86683-val_ExpRate=0.4427.ckpt")
+    model_module = (LitSwinPreARM.
+                    load_from_checkpoint("checkpoint/epoch=51-val_loss=0.35873180627822876-step=86683-val_ExpRate=0.4427.ckpt",
+                                         learning_rate=config.model.learning_rate,))
 
     data_module = CROHMEDatamodule(
         zipfile_path=config.data.zipfile_path,
