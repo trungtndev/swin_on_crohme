@@ -1,10 +1,12 @@
 <div align="center">    
  
-# CoMER: Modeling Coverage for Transformer-based Handwritten Mathematical Expression Recognition  
- 
-[![arXiv](https://img.shields.io/badge/arXiv-2207.04410-b31b1b.svg)](https://arxiv.org/abs/2207.04410)
+[//]: # (# CoMER: Modeling Coverage for Transformer-based Handwritten Mathematical Expression Recognition  )
 
-</div>
+[//]: # ( )
+[//]: # ([![arXiv]&#40;https://img.shields.io/badge/arXiv-2207.04410-b31b1b.svg&#41;]&#40;https://arxiv.org/abs/2207.04410&#41;)
+
+[//]: # ()
+[//]: # (</div>)
 
 ## Project structure
 ```bash
