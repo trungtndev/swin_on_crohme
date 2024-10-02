@@ -62,6 +62,11 @@ def train(config):
     lr_callback = pl.callbacks.LearningRateMonitor(
         logging_interval=config.trainer.callbacks[0].init_args.logging_interval)
 
+    lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
+        dirpath="checkpoint",
+        save_last=True,
+    )
+
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath="lightning_logs",
         save_top_k=config.trainer.callbacks[1].init_args.save_top_k,
@@ -71,8 +76,6 @@ def train(config):
 
     trainer = pl.Trainer(
         devices=config.trainer.devices,
-        tpu_cores=config.trainer.tpu_cores,
-        gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
         max_epochs=config.trainer.max_epochs,
@@ -80,7 +83,7 @@ def train(config):
 
         plugins=DDPPlugin(find_unused_parameters=False),
         logger=logger,
-        callbacks=[lr_callback, checkpoint_callback],
+        callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
 
     trainer.fit(model_module, data_module)

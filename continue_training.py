@@ -12,9 +12,7 @@ from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 def train(config):
     pl.seed_everything(config.seed_everything, workers=True)
 
-    model_module = (LitSwinPreARM.
-                    load_from_checkpoint("checkpoint/epoch=51-val_loss=0.35873180627822876-step=86683-val_ExpRate=0.4427.ckpt",
-                                         learning_rate=config.model.learning_rate,))
+    model_module = LitSwinPreARM.load_from_checkpoint("checkpoint/last.ckpt")
 
     data_module = CROHMEDatamodule(
         zipfile_path=config.data.zipfile_path,
@@ -28,10 +26,10 @@ def train(config):
 
     logger = Logger(name=config.wandb.name,
                     project=config.wandb.project,
-                    id="8pl6jd7j?nw=nwusertrunglh113",
                     log_model=config.wandb.log_model,
                     config=dict(config),
                     )
+
     logger.watch(model_module,
                  log="all",
                  log_freq=100
@@ -40,6 +38,10 @@ def train(config):
     lr_callback = pl.callbacks.LearningRateMonitor(
         logging_interval=config.trainer.callbacks[0].init_args.logging_interval)
 
+    lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
+        dirpath="checkpoint",
+        save_last=True,
+    )
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath="lightning_logs",
         save_top_k=config.trainer.callbacks[1].init_args.save_top_k,
@@ -48,11 +50,9 @@ def train(config):
         filename=config.trainer.callbacks[1].init_args.filename)
 
     trainer = pl.Trainer(
-        resume_from_checkpoint="checkpoint/epoch=51-val_loss=0.35873180627822876-step=86683-val_ExpRate=0.4427.ckpt",
+        resume_from_checkpoint="checkpoint/last.ckpt",
 
         devices=config.trainer.devices,
-        tpu_cores=config.trainer.tpu_cores,
-        gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
         max_epochs=config.trainer.max_epochs,
@@ -60,9 +60,8 @@ def train(config):
 
         plugins=DDPPlugin(find_unused_parameters=False),
         logger=logger,
-        callbacks=[lr_callback, checkpoint_callback],
+        callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
-
     trainer.fit(model_module, data_module)
 
 
