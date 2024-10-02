@@ -1,4 +1,4 @@
-<div align="center">    
+[//]: # (<div align="center">    )
  
 [//]: # (# CoMER: Modeling Coverage for Transformer-based Handwritten Mathematical Expression Recognition  )
 
