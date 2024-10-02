@@ -17,7 +17,7 @@ from .vocab import vocab
 Data = List[Tuple[str, Image.Image, List[str]]]
 
 MAX_SIZE = 32e4  # change here accroading to your GPU memory
-max_n_traing_samples = 20000
+max_n_traing_samples = 40000
 max_n_val_samples = 2000
 
 # load data
