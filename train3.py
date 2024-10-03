@@ -75,7 +75,6 @@ def train(config):
         filename=config.trainer.callbacks[1].init_args.filename)
 
     trainer = pl.Trainer(
-        devices=config.trainer.devices,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
         max_epochs=config.trainer.max_epochs,
@@ -94,5 +93,4 @@ if __name__ == "__main__":
     parser.add_argument("--config", type=str, required=True)
     args = parser.parse_args()
     config = Config(args.config)
-    # print(config)
     train(config)
