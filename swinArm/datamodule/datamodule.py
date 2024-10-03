@@ -17,8 +17,8 @@ from .vocab import vocab
 Data = List[Tuple[str, Image.Image, List[str]]]
 
 MAX_SIZE = 32e4  # change here accroading to your GPU memory
-max_n_traing_samples = 45000
-max_n_val_samples = 1000
+max_n_traing_samples = 50000
+max_n_val_samples = 1200
 
 # load data
 def data_iterator(
@@ -214,7 +214,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
             shuffle=True,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
-            pin_memory=False,
+            pin_memory=True,
         )
 
     def val_dataloader(self):
