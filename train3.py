@@ -64,6 +64,7 @@ def train(config):
 
     lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath="checkpoint",
+        monitor=None,
     )
 
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
