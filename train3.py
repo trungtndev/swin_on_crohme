@@ -2,6 +2,8 @@ import argparse
 import os
 import wandb
 from pytorch_lightning.loggers import WandbLogger as Logger
+from torch.distributed.pipeline.sync.checkpoint import enable_checkpointing
+
 from swinArm.datamodule import CROHMEDatamodule
 from swinArm.lit_swinPreArm import LitSwinPreARM
 from sconf import Config
@@ -64,6 +66,7 @@ def train(config):
 
     lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath="checkpoint",
+        every_n_epochs=1,
         monitor=None,
     )
 
@@ -83,6 +86,7 @@ def train(config):
 
         plugins=DDPPlugin(find_unused_parameters=False),
         logger=logger,
+        enable_model_summary=True,
         callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
 
