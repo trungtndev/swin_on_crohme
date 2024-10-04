@@ -202,7 +202,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
             shuffle=True,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
-            pin_memory=True,
+            pin_memory=False,
         )
 
     def val_dataloader(self):
@@ -211,7 +211,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
-            pin_memory=True,
+            pin_memory=False,
         )
 
     def test_dataloader(self):
@@ -220,5 +220,5 @@ class CROHMEDatamodule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
-            pin_memory=True,
+            pin_memory=False,
         )
