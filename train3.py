@@ -2,7 +2,6 @@ import argparse
 import os
 import wandb
 from pytorch_lightning.loggers import WandbLogger as Logger
-from torch.distributed.pipeline.sync.checkpoint import enable_checkpointing
 
 from swinArm.datamodule import CROHMEDatamodule
 from swinArm.lit_swinPreArm import LitSwinPreARM
