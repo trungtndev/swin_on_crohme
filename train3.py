@@ -65,7 +65,9 @@ def train(config):
 
     lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath="checkpoint",
+        filename="lasted",
         every_n_epochs=1,
+        save_on_train_epoch_end=True,
         monitor=None,
     )
 
@@ -84,6 +86,7 @@ def train(config):
         deterministic=config.trainer.deterministic,
 
         plugins=DDPPlugin(find_unused_parameters=False),
+        weights_summary="top",
         logger=logger,
         callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
