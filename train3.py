@@ -85,7 +85,6 @@ def train(config):
 
         plugins=DDPPlugin(find_unused_parameters=False),
         logger=logger,
-        enable_model_summary=True,
         callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
 
