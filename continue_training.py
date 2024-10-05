@@ -12,7 +12,10 @@ from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 def train(config):
     pl.seed_everything(config.seed_everything, workers=True)
 
-    model_module = LitSwinPreARM.load_from_checkpoint("checkpoint/last.ckpt")
+    model_module = LitSwinPreARM.load_from_checkpoint("checkpoint/lasted-v1.ckpt")
+    for param in model_module.parameters():
+        param.requires_grad = True
+
 
     data_module = CROHMEDatamodule(
         zipfile_path=config.data.zipfile_path,
@@ -40,7 +43,10 @@ def train(config):
 
     lasted_checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath="checkpoint",
-        save_last=True,
+        filename="lasted",
+        every_n_epochs=1,
+        save_on_train_epoch_end=True,
+        monitor=None,
     )
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         dirpath="lightning_logs",
@@ -50,15 +56,14 @@ def train(config):
         filename=config.trainer.callbacks[1].init_args.filename)
 
     trainer = pl.Trainer(
-        resume_from_checkpoint="checkpoint/last.ckpt",
-
-        devices=config.trainer.devices,
+        gpus=config.trainer.gpus,
         accelerator=config.trainer.accelerator,
         check_val_every_n_epoch=config.trainer.check_val_every_n_epoch,
         max_epochs=config.trainer.max_epochs,
         deterministic=config.trainer.deterministic,
 
         plugins=DDPPlugin(find_unused_parameters=False),
+        weights_summary="top",
         logger=logger,
         callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
