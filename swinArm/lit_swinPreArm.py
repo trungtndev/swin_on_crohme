@@ -151,11 +151,19 @@ class LitSwinPreARM(pl.LightningModule):
         return self.model.beam_search(img, mask, **self.hparams)
 
     def configure_optimizers(self):
+        # optimizer = optim.SGD(
+        #     self.parameters(),
+        #     lr=self.hparams.learning_rate,
+        #     momentum=0.9,
+        #     weight_decay=1e-5,
+        # )
         optimizer = optim.SGD(
-            self.parameters(),
-            lr=self.hparams.learning_rate,
+            [
+                {'params': self.model.encoder.parameters(), 'lr': 1e-4},
+                {'params': self.model.decoder.parameters(), 'lr': 0.05},
+            ],
             momentum=0.9,
-            # weight_decay=1e-5,
+            weight_decay=1e-5
         )
 
         # optimizer = optim.Adam(
@@ -167,7 +175,7 @@ class LitSwinPreARM(pl.LightningModule):
         reduce_scheduler = optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
             mode="max",
-            factor=0.15, # 0.25
+            factor=0.15,  # 0.25
             patience=self.hparams.patience // self.trainer.check_val_every_n_epoch,
         )
         scheduler = {
