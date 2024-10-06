@@ -177,6 +177,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
         self.eval_batch_size = eval_batch_size
         self.num_workers = num_workers
         self.scale_aug = scale_aug
+        vocab.init(os.path.join(zipfile_path, "dictionary.txt"))
 
         print(f"Load data from: {self.zipfile_path}")
 
