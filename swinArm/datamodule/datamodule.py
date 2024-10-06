@@ -1,28 +1,23 @@
 import os
+import pickle
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
-from zipfile import ZipFile
 
 import numpy as np
 import pytorch_lightning as pl
 import torch
-from swinArm.datamodule.dataset import CROHMEDataset
-from PIL import Image
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
-import tqdm
-import pickle
-import gc
+
+from ical.datamodule.dataset import HMEDataset
+
 from .vocab import vocab
 
-Data = List[Tuple[str, Image.Image, List[str]]]
-
-MAX_SIZE = 32e4  # change here accroading to your GPU memory
-max_n_traing_samples = 43000
-max_n_val_samples = 1000
-
+Data = List[Tuple[str, np.ndarray, List[str]]]
 
 # load data
+
+
 def data_iterator(
     data: Data,
     batch_size: int,
@@ -79,7 +74,8 @@ def data_iterator(
     print("total ", len(feature_total), "batch data loaded")
     return list(zip(fname_total, feature_total, label_total))
 
-def extract_data(folder, dir_name: str) -> Data:
+
+def extract_data(folder: str, dir_name: str) -> Data:
     """Extract all data need for a dataset from zip archive
 
     Args:
@@ -132,9 +128,10 @@ def collate_fn(batch):
     images_x = batch[1]
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
+# ======================= Resize ===================================
     for i in range(len(images_x)):
-        images_x[i] = images_x.resize((224, 224))
-
+        images_x[i] = images_x[i].resize((224, 224))
+# =====================================================================================
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
 
@@ -151,27 +148,29 @@ def collate_fn(batch):
     return Batch(fnames, x, x_mask, seqs_y)
 
 
-def build_dataset(archive, folder: str, batch_size: int):
+def build_dataset(archive, folder: str, batch_size: int, max_size: int, is_train: bool):
     data = extract_data(archive, folder)
-    return data_iterator(data, batch_size)
+    return data_iterator(data, batch_size, max_size, is_train)
 
 
-class CROHMEDatamodule(pl.LightningDataModule):
+class HMEDatamodule(pl.LightningDataModule):
     def __init__(
-            self,
-            zipfile_path: str = "",
-            dataset_name: str = "",
-            test_year: str = "2014",
-            train_batch_size: int = 8,
-            eval_batch_size: int = 4,
-            num_workers: int = 5,
-            scale_aug: bool = False,
+        self,
+        zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data/crohme",
+        test_folder: str = "2014",
+        max_size: int = 32e4,
+        scale_to_limit: bool = True,
+        train_batch_size: int = 8,
+        eval_batch_size: int = 4,
+        num_workers: int = 5,
+        scale_aug: bool = False,
     ) -> None:
         super().__init__()
-        assert isinstance(test_year, str)
+        assert isinstance(test_folder, str)
         self.folder = zipfile_path
-        self.dataset_name = dataset_name
-        self.test_year = test_year
+        self.test_folder = test_folder
+        self.max_size = max_size
+        self.scale_to_limit = scale_to_limit
         self.train_batch_size = train_batch_size
         self.eval_batch_size = eval_batch_size
         self.num_workers = num_workers
@@ -183,55 +182,39 @@ class CROHMEDatamodule(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None) -> None:
         if stage == "fit" or stage is None:
-            self.train_dataset = CROHMEDataset(
+            self.train_dataset = HMEDataset(
                 build_dataset(
-                    self.folder,
-                    "train",
-                    self.train_batch_size
+                    self.folder, "train", self.train_batch_size, self.max_size, True
                 ),
                 True,
                 self.scale_aug,
+                # self.scale_to_limit,
             )
-            self.val_dataset = CROHMEDataset(
-                build_dataset(self.folder, self.test_folder, self.eval_batch_size,
-                ),
-                False,
-                self.scale_aug,
-            )
-        if stage == "test" or stage is None:
-            self.test_dataset = CROHMEDataset(
+            self.val_dataset = HMEDataset(
                 build_dataset(
                     self.folder,
                     self.test_folder,
                     self.eval_batch_size,
+                    self.max_size,
+                    False,
                 ),
                 False,
                 self.scale_aug,
+                # self.scale_to_limit,
             )
-
-
-    # def setup(self, stage: Optional[str] = None) -> None:
-    #     if stage == "fit" or stage is None:
-    #         self.train_dataset = CROHMEDataset(
-    #             build_dataset(self.zipfile_path, f"{self.dataset_name}/train",
-    #                           self.train_batch_size),
-    #             True,
-    #             self.scale_aug,
-    #         )
-    #         self.val_dataset = CROHMEDataset(
-    #             build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}",
-    #                           self.eval_batch_size),
-    #             False,
-    #             self.scale_aug,
-    #         )
-    #     if stage == "test" or stage is None:
-    #         self.test_dataset = CROHMEDataset(
-    #             build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}",
-    #
-    #                           self.eval_batch_size),
-    #             False,
-    #             self.scale_aug,
-    #         )
+        if stage == "test" or stage is None:
+            self.test_dataset = HMEDataset(
+                build_dataset(
+                    self.folder,
+                    self.test_folder,
+                    self.eval_batch_size,
+                    self.max_size,
+                    False,
+                ),
+                False,
+                self.scale_aug,
+                # self.scale_to_limit,
+            )
 
     def train_dataloader(self):
         return DataLoader(
