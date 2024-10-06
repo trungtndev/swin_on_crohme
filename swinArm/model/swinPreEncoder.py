@@ -6,7 +6,7 @@ from timm.models.swin_transformer import SwinTransformer
 
 class SwinV1Encoder(pl.LightningModule):
     def __init__(self,
-                 d_model:int,
+                 d_model: int,
                  requires_grad,
                  drop_rate=0.1,
                  proj_drop_rate=0.0,
@@ -18,7 +18,7 @@ class SwinV1Encoder(pl.LightningModule):
             img_size=224,
             in_chans=1,
             embed_dim=48,
-            depths=(2, 2, 6, 2),
+            depths=(2, 2, 8, 2),
             num_heads=(3, 6, 12, 24),
             window_size=(28, 24, 7, 7),
             mlp_ratio=2,
