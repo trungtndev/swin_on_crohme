@@ -24,11 +24,11 @@ max_n_val_samples = 1000
 
 # load data
 def data_iterator(
-        data: Data,
-        batch_size: int,
-        batch_Imagesize: int = MAX_SIZE,
-        maxlen: int = 200,
-        maxImagesize: int = MAX_SIZE,
+    data: Data,
+    batch_size: int,
+    max_size: int,
+    is_train: bool,
+    maxlen: int = 200,
 ):
     fname_batch = []
     feature_batch = []
@@ -38,26 +38,22 @@ def data_iterator(
     fname_total = []
     biggest_image_size = 0
 
-    print(type(data[1]))
-
-    data.sort(key=lambda x: x[1].size[0] * x[1].size[1])
+    data.sort(key=lambda x: x[1].shape[0] * x[1].shape[1])
 
     i = 0
     for fname, fea, lab in data:
-        print(type(fea))
-        size = fea.size[0] * fea.size[1]
-        fea = np.array(fea)
+        size = fea.shape[0] * fea.shape[1]
         if size > biggest_image_size:
             biggest_image_size = size
         batch_image_size = biggest_image_size * (i + 1)
-        if len(lab) > maxlen:
+        if is_train and len(lab) > maxlen:
             print("sentence", i, "length bigger than", maxlen, "ignore")
-        elif size > maxImagesize:
+        elif is_train and size > max_size:
             print(
-                f"image: {fname} size: {fea.shape[0]} x {fea.shape[1]} =  bigger than {maxImagesize}, ignore"
+                f"image: {fname} size: {fea.shape[0]} x {fea.shape[1]} =  bigger than {max_size}, ignore"
             )
         else:
-            if batch_image_size > batch_Imagesize or i == batch_size:  # a batch is full
+            if batch_image_size > max_size or i == batch_size:  # a batch is full
                 fname_total.append(fname_batch)
                 feature_total.append(feature_batch)
                 label_total.append(label_batch)
@@ -82,7 +78,6 @@ def data_iterator(
     label_total.append(label_batch)
     print("total ", len(feature_total), "batch data loaded")
     return list(zip(fname_total, feature_total, label_total))
-
 
 def extract_data(folder, dir_name: str) -> Data:
     """Extract all data need for a dataset from zip archive
