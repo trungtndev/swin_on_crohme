@@ -31,7 +31,7 @@ class SwinV1Encoder(pl.LightningModule):
 
         # add output layer
         self.swinv1.head = torch.nn.Sequential(
-            torch.nn.Linear(128, d_model),
+            torch.nn.Linear(192, d_model),
             torch.nn.LayerNorm(d_model),
             torch.nn.GELU(),
             torch.nn.Dropout(drop_rate),
