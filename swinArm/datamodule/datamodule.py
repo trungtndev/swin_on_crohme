@@ -133,6 +133,9 @@ def collate_fn(batch):
     images_x = batch[1]
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
+    for i in range(len(images_x)):
+        images_x[i] = images_x.resize((224, 224))
+
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
 
@@ -140,7 +143,7 @@ def collate_fn(batch):
     max_height_x = max(heights_x)
     max_width_x = max(widths_x)
 
-    x = torch.zeros(n_samples, 3, max_height_x, max_width_x)
+    x = torch.zeros(n_samples, 1, max_height_x, max_width_x)
     x_mask = torch.ones(n_samples, max_height_x, max_width_x, dtype=torch.bool)
     for idx, s_x in enumerate(images_x):
         x[idx, :, : heights_x[idx], : widths_x[idx]] = s_x
