@@ -11,10 +11,10 @@ class CROHMEVocab:
     PAD_IDX = 0
     SOS_IDX = 1
     EOS_IDX = 2
-
+    word2idx = dict()
     def init(self, dict_path: str) -> None:
         #dddd
-        word2idx = dict()
+
         self.word2idx["<pad>"] = self.PAD_IDX
         self.word2idx["<sos>"] = self.SOS_IDX
         self.word2idx["<eos>"] = self.EOS_IDX
