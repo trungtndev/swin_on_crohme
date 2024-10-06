@@ -17,11 +17,11 @@ class SwinV1Encoder(pl.LightningModule):
         self.swinv1 = SwinTransformer(
             img_size=224,
             in_chans=1,
-            embed_dim=32,
+            embed_dim=64,
             depths=(2, 2, 8, 2),
             num_heads=(3, 6, 8, 12),
-            window_size=(12, 7, 7, 7),
-            mlp_ratio=3,
+            window_size=(12, 8, 6, 4),
+            mlp_ratio=4,
 
             drop_rate=drop_rate,
             proj_drop_rate=proj_drop_rate,
