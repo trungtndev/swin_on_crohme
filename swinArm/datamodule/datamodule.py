@@ -129,8 +129,9 @@ def collate_fn(batch):
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
 # ======================= Resize ===================================
-    for i in range(len(images_x)):
-        images_x[i] = images_x[i].resize((224, 224))
+    for i in images_x:
+        print(i)
+        i = i.resize((224, 224))
 # =====================================================================================
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
