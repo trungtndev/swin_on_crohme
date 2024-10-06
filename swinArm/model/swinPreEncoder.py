@@ -18,10 +18,10 @@ class SwinV1Encoder(pl.LightningModule):
             img_size=224,
             in_chans=1,
             embed_dim=16,
-            depths=(2, 2, 8, 2),
-            num_heads=(3, 6, 12, 24),
+            depths=(2, 4, 8, 2),
+            num_heads=(3, 6, 8, 12),
             window_size=(12, 7, 7, 7),
-            mlp_ratio=3,
+            mlp_ratio=4,
 
             drop_rate=drop_rate,
             proj_drop_rate=proj_drop_rate,
@@ -36,7 +36,8 @@ class SwinV1Encoder(pl.LightningModule):
             torch.nn.GELU(),
             torch.nn.Dropout(drop_rate),
         )
-#
+
+    #
     def forward(self, img, img_mask):
         x = self.swinv1(img)
         img_mask = img_mask[:, 0::4, 0::4][:, 0::2, 0::2][:, 0::2, 0::2][:, 0::2, 0::2]
