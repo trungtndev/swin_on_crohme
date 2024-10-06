@@ -5,7 +5,7 @@ import torch.nn as nn
 from einops import rearrange
 from torch import FloatTensor, LongTensor
 
-from swinArm.datamodule import vocab
+from swinArm.datamodule import vocab, vocab_size
 from swinArm.model.pos_enc import WordPosEnc
 from swinArm.model.transformer.arm import AttentionRefinementModule
 from swinArm.model.transformer.transformer_decoder import (
@@ -55,7 +55,7 @@ class Decoder(DecodeModel):
         super().__init__()
 
         self.word_embed = nn.Sequential(
-            nn.Embedding(114, d_model),
+            nn.Embedding(vocab_size, d_model),
             nn.LayerNorm(d_model)
         )
 
@@ -74,7 +74,7 @@ class Decoder(DecodeModel):
             self_coverage=self_coverage,
         )
 
-        self.proj = nn.Linear(d_model, 114)
+        self.proj = nn.Linear(d_model, vocab_size)
 
     def _build_attention_mask(self, length):
         # lazily create causal attention mask, with full attention between the vision tokens
@@ -107,7 +107,6 @@ class Decoder(DecodeModel):
         _, l = tgt.size()
         tgt_mask = self._build_attention_mask(l)
         tgt_pad_mask = tgt == vocab.PAD_IDX
-
         tgt = self.word_embed(tgt)  # [b, l, d]
         tgt = self.pos_enc(tgt)  # [b, l, d]
         tgt = self.norm(tgt)
