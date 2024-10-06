@@ -9,7 +9,7 @@ import torch
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
 
-from swinArm.datamodule.dataset import HMEDataset
+from swinArm.datamodule.dataset import CROHMEDataset
 
 from .vocab import vocab
 
