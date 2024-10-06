@@ -180,7 +180,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
 
         vocab.init(os.path.join(zipfile_path, "dictionary.txt"))
 
-        print(f"Load data from: {self.zipfile_path}")
+        print(f"Load data from: {self.folder}")
 
     def setup(self, stage: Optional[str] = None) -> None:
         if stage == "fit" or stage is None:
