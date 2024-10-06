@@ -11,6 +11,7 @@ from PIL import Image
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
 import tqdm
+import pickle
 import gc
 from .vocab import vocab
 
@@ -186,7 +187,9 @@ class CROHMEDatamodule(pl.LightningDataModule):
         if stage == "fit" or stage is None:
             self.train_dataset = CROHMEDataset(
                 build_dataset(
-                    self.folder, "train", self.train_batch_size
+                    self.folder,
+                    "train",
+                    self.train_batch_size
                 ),
                 True,
                 self.scale_aug,
