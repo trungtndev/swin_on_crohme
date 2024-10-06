@@ -11,20 +11,21 @@ class CROHMEVocab:
     PAD_IDX = 0
     SOS_IDX = 1
     EOS_IDX = 2
-    word2idx = dict()
+
     def init(self, dict_path: str) -> None:
         #dddd
-
+        word2idx = dict()
         self.word2idx["<pad>"] = self.PAD_IDX
         self.word2idx["<sos>"] = self.SOS_IDX
         self.word2idx["<eos>"] = self.EOS_IDX
 
-        with open(dict_path, "r", encoding='utf-8') as f:
+        with open(dict_path, "r") as f:
             for line in f.readlines():
                 w = line.strip()
                 self.word2idx[w] = len(self.word2idx)
 
-        self.idx2word: Dict[int, str] = {v: k for k, v in self.word2idx.items()}
+        self.idx2word: Dict[int, str] = {
+            v: k for k, v in self.word2idx.items()}
 
         # print(f"Init vocab with size: {len(self.word2idx)}")
 
