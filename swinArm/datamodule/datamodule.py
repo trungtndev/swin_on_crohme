@@ -182,7 +182,7 @@ class HMEDatamodule(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None) -> None:
         if stage == "fit" or stage is None:
-            self.train_dataset = HMEDataset(
+            self.train_dataset = CROHMEDataset(
                 build_dataset(
                     self.folder, "train", self.train_batch_size, self.max_size, True
                 ),
@@ -190,7 +190,7 @@ class HMEDatamodule(pl.LightningDataModule):
                 self.scale_aug,
                 # self.scale_to_limit,
             )
-            self.val_dataset = HMEDataset(
+            self.val_dataset = CROHMEDataset(
                 build_dataset(
                     self.folder,
                     self.test_folder,
@@ -203,7 +203,7 @@ class HMEDatamodule(pl.LightningDataModule):
                 # self.scale_to_limit,
             )
         if stage == "test" or stage is None:
-            self.test_dataset = HMEDataset(
+            self.test_dataset = CROHMEDataset(
                 build_dataset(
                     self.folder,
                     self.test_folder,
