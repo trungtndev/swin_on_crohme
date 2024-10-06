@@ -74,7 +74,7 @@ class Decoder(DecodeModel):
             self_coverage=self_coverage,
         )
 
-        self.proj = nn.Linear(d_model, vocab_size)
+        self.proj = nn.Linear(d_model, 114)
 
     def _build_attention_mask(self, length):
         # lazily create causal attention mask, with full attention between the vision tokens
