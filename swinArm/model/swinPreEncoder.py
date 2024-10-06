@@ -17,11 +17,11 @@ class SwinV1Encoder(pl.LightningModule):
         self.swinv1 = SwinTransformer(
             img_size=224,
             in_chans=1,
-            embed_dim=32,
-            depths=(2, 2, 8, 2),
+            embed_dim=16,
+            depths=(2, 2, 12, 4),
             num_heads=(3, 6, 12, 24),
-            window_size=(28, 24, 7, 7),
-            mlp_ratio=2,
+            window_size=(12, 7, 7, 2),
+            mlp_ratio=3,
 
             drop_rate=drop_rate,
             proj_drop_rate=proj_drop_rate,
@@ -31,7 +31,7 @@ class SwinV1Encoder(pl.LightningModule):
 
         # add output layer
         self.swinv1.head = torch.nn.Sequential(
-            torch.nn.Linear(256, d_model),
+            torch.nn.Linear(128, d_model),
             torch.nn.LayerNorm(d_model),
             torch.nn.GELU(),
             torch.nn.Dropout(drop_rate),
