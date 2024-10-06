@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 import torch
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
-
+import cv2
 from swinArm.datamodule.dataset import CROHMEDataset
 
 from .vocab import vocab
@@ -97,7 +97,8 @@ def extract_data(folder: str, dir_name: str) -> Data:
         img = images[img_name]
 
         for i in img:
-            i = i.resize((224, 224))
+            i = cv2.resize(i, (224, 224))
+            i = np.array(i)
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")

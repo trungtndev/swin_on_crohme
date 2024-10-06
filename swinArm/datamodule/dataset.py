@@ -22,7 +22,7 @@ class CROHMEDataset(Dataset):
 
         trans_list = []
         # trans_list.append(tr.Resize((224, 224)))
-        trans_list.append(ScaleToLimitRange(w_lo=224, w_hi=224, h_lo=224, h_hi=224))
+        # trans_list.append(ScaleToLimitRange(w_lo=224, w_hi=224, h_lo=224, h_hi=224))
         trans_list.append(tr.ToTensor())
 
         # if is_train and scale_aug:
@@ -46,7 +46,6 @@ class CROHMEDataset(Dataset):
     def __getitem__(self, idx):
         fname, img, caption = self.ds[idx]
 
-        img = [Image.fromarray(im) for im in img]
         img = [self.transform(im) for im in img]
 
         return fname, img, caption
