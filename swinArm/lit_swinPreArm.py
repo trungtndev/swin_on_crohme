@@ -157,20 +157,20 @@ class LitSwinPreARM(pl.LightningModule):
         #     momentum=0.9,
         #     weight_decay=1e-5,
         # )
-        # optimizer = optim.SGD(
-        #     [
-        #         {'params': self.model.encoder.parameters(), 'lr': 1e-3},
-        #         {'params': self.model.decoder.parameters(), 'lr': 0.05},
-        #     ],
-        #     momentum=0.9,
-        #     # weight_decay=1e-5
-        # )
-
-        optimizer = optim.Adam(
-            self.parameters(),
-            lr=self.hparams.learning_rate,
-            weight_decay=1e-5,  # 1e-4
+        optimizer = optim.SGD(
+            [
+                {'params': self.model.encoder.parameters(), 'lr': 0.008},
+                {'params': self.model.decoder.parameters(), 'lr': 0.05},
+            ],
+            momentum=0.9,
+            # weight_decay=1e-5
         )
+
+        # optimizer = optim.Adam(
+        #     self.parameters(),
+        #     lr=self.hparams.learning_rate,
+        #     weight_decay=1e-5,  # 1e-4
+        # )
 
         reduce_scheduler = optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
