@@ -41,7 +41,6 @@ def train(config):
     )
     data_module = CROHMEDatamodule(
         zipfile_path=config.data.zipfile_path,
-        dataset_name=config.data.dataset_name,
         test_year=config.data.test_year,
         train_batch_size=config.data.train_batch_size,
         eval_batch_size=config.data.eval_batch_size,
