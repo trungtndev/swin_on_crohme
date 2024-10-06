@@ -38,8 +38,11 @@ def data_iterator(
     fname_total = []
     biggest_image_size = 0
 
+    data.sort(key=lambda x: x[1].size[0] * x[1].size[1])
+
     i = 0
     for fname, fea, lab in data:
+        print(type(fea))
         size = fea.size[0] * fea.size[1]
         fea = np.array(fea)
         if size > biggest_image_size:
