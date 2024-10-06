@@ -153,7 +153,7 @@ def build_dataset(archive, folder: str, batch_size: int, max_size: int, is_train
     return data_iterator(data, batch_size, max_size, is_train)
 
 
-class HMEDatamodule(pl.LightningDataModule):
+class CROHMEDatamodule(pl.LightningDataModule):
     def __init__(
         self,
         zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data/crohme",
