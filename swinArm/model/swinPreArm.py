@@ -75,6 +75,7 @@ class SwinPreARM(pl.LightningModule):
         feature = torch.cat((feature, feature), dim=0)  # [2b, t, d]
         mask = torch.cat((mask, mask), dim=0)
 
+        assert tgt.dim() > 0
         out = self.decoder(feature, mask, tgt)
 
         return out
