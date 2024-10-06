@@ -18,9 +18,9 @@ class SwinV1Encoder(pl.LightningModule):
             img_size=224,
             in_chans=1,
             embed_dim=16,
-            depths=(2, 2, 12, 4),
+            depths=(2, 2, 8, 2),
             num_heads=(3, 6, 12, 24),
-            window_size=(12, 7, 7, 2),
+            window_size=(12, 7, 7, 7),
             mlp_ratio=3,
 
             drop_rate=drop_rate,
