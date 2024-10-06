@@ -55,7 +55,7 @@ class Decoder(DecodeModel):
         super().__init__()
 
         self.word_embed = nn.Sequential(
-            nn.Embedding(vocab_size, d_model),
+            nn.Embedding(vocab_size + 1, d_model),
             nn.LayerNorm(d_model)
         )
 
