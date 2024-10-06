@@ -159,11 +159,11 @@ class LitSwinPreARM(pl.LightningModule):
         # )
         optimizer = optim.SGD(
             [
-                {'params': self.model.encoder.parameters(), 'lr': 1e-4},
+                {'params': self.model.encoder.parameters(), 'lr': 1e-3},
                 {'params': self.model.decoder.parameters(), 'lr': 0.05},
             ],
             momentum=0.9,
-            weight_decay=1e-5
+            # weight_decay=1e-5
         )
 
         # optimizer = optim.Adam(
