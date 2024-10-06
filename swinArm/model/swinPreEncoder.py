@@ -36,7 +36,7 @@ class SwinV1Encoder(pl.LightningModule):
             torch.nn.GELU(),
             torch.nn.Dropout(drop_rate),
         )
-
+#
     def forward(self, img, img_mask):
         x = self.swinv1(img)
         img_mask = img_mask[:, 0::4, 0::4][:, 0::2, 0::2][:, 0::2, 0::2][:, 0::2, 0::2]
