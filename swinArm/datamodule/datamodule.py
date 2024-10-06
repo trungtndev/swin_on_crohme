@@ -160,7 +160,7 @@ def build_dataset(archive, folder: str, batch_size: int):
 class CROHMEDatamodule(pl.LightningDataModule):
     def __init__(
             self,
-            zipfile_path: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data.zip",
+            zipfile_path: str = "",
             dataset_name: str = "",
             test_year: str = "2014",
             train_batch_size: int = 8,
@@ -177,6 +177,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
         self.eval_batch_size = eval_batch_size
         self.num_workers = num_workers
         self.scale_aug = scale_aug
+
         vocab.init(os.path.join(zipfile_path, "dictionary.txt"))
 
         print(f"Load data from: {self.zipfile_path}")
