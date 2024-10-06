@@ -13,6 +13,7 @@ class CROHMEVocab:
     EOS_IDX = 2
 
     def init(self, dict_path: str) -> None:
+        #
         self.word2idx = dict()
         self.word2idx["<pad>"] = self.PAD_IDX
         self.word2idx["<sos>"] = self.SOS_IDX
