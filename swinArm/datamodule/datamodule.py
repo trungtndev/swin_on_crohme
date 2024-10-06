@@ -9,6 +9,7 @@ import torch
 from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
 import cv2
+from PIL import Image
 from swinArm.datamodule.dataset import CROHMEDataset
 
 from .vocab import vocab
@@ -96,9 +97,7 @@ def extract_data(folder: str, dir_name: str) -> Data:
         formula = tmp[1:]
         img = images[img_name]
 #========= Resize image to 224x224 =========
-        for i in img:
-            i = cv2.resize(i, (224, 224))
-            i = np.array(i)
+        img = cv2.resize(img, (224, 224))
 #==========================================
 
         data.append((img_name, img, formula))
