@@ -186,7 +186,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
         if stage == "fit" or stage is None:
             self.train_dataset = CROHMEDataset(
                 build_dataset(
-                    self.folder, "train", self.train_batch_size, self.max_size
+                    self.folder, "train", self.train_batch_size, self.train_batch_size
                 ),
                 True,
                 self.scale_aug,
