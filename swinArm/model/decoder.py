@@ -55,7 +55,7 @@ class Decoder(DecodeModel):
         super().__init__()
 
         self.word_embed = nn.Sequential(
-            nn.Embedding(vocab_size + 1, d_model),
+            nn.Embedding(vocab_size, d_model),
             nn.LayerNorm(d_model)
         )
 
@@ -107,7 +107,7 @@ class Decoder(DecodeModel):
         _, l = tgt.size()
         tgt_mask = self._build_attention_mask(l)
         tgt_pad_mask = tgt == vocab.PAD_IDX
-
+        print(tgt)
         tgt = self.word_embed(tgt)  # [b, l, d]
         tgt = self.pos_enc(tgt)  # [b, l, d]
         tgt = self.norm(tgt)
