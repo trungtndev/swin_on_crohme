@@ -20,6 +20,7 @@ MAX_SIZE = 32e4  # change here accroading to your GPU memory
 max_n_traing_samples = 43000
 max_n_val_samples = 1000
 
+
 # load data
 def data_iterator(
         data: Data,
@@ -79,7 +80,7 @@ def data_iterator(
     return list(zip(fname_total, feature_total, label_total))
 
 
-def extract_data(archive: ZipFile, dir_name: str) -> Data:
+def extract_data(folder, dir_name: str) -> Data:
     """Extract all data need for a dataset from zip archive
 
     Args:
@@ -89,32 +90,20 @@ def extract_data(archive: ZipFile, dir_name: str) -> Data:
     Returns:
         Data: list of tuple of image and formula
     """
-    max_samples = max_n_val_samples
-    type_dataset = dir_name.split("/")[-1] # train, test_2014, test_2016,...
-    if type_dataset == "train":
-        max_samples = max_n_traing_samples
-    count = 0
-
-    with open(f"{archive}/{dir_name}/caption.txt", "r") as f:
+    with open(os.path.join(folder, dir_name, "images.pkl"), "rb") as f:
+        images = pickle.load(f)
+    with open(os.path.join(folder, dir_name, "caption.txt"), "r") as f:
         captions = f.readlines()
     data = []
-    for line in tqdm.tqdm(captions):
+    for line in captions:
         tmp = line.strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
-
-        img_name = img_name.split(".")[0]
-        with open(f"{archive}/{dir_name}/img/{img_name}.bmp", "rb") as f:
-            img = Image.open(f).convert("RGB").copy()
-            img = img.resize((224, 224))
+        img = images[img_name]
         data.append((img_name, img, formula))
 
-        if count > max_samples:
-            break
-        count += 1
+    print(f"Extract data from: {dir_name}, with data size: {len(data)}")
 
-    print(f"Extract data from: {dir_name}/{archive}, with data size: {len(data)}")
-    gc.collect()
     return data
 
 
@@ -178,7 +167,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
     ) -> None:
         super().__init__()
         assert isinstance(test_year, str)
-        self.zipfile_path = zipfile_path
+        self.folder = zipfile_path
         self.dataset_name = dataset_name
         self.test_year = test_year
         self.train_batch_size = train_batch_size
@@ -191,21 +180,53 @@ class CROHMEDatamodule(pl.LightningDataModule):
     def setup(self, stage: Optional[str] = None) -> None:
         if stage == "fit" or stage is None:
             self.train_dataset = CROHMEDataset(
-                build_dataset(self.zipfile_path, f"{self.dataset_name}/train", self.train_batch_size),
+                build_dataset(
+                    self.folder, "train", self.train_batch_size, self.max_size
+                ),
                 True,
                 self.scale_aug,
             )
             self.val_dataset = CROHMEDataset(
-                build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
+                build_dataset(self.folder, self.test_folder, self.eval_batch_size, self.max_size,
+                ),
                 False,
                 self.scale_aug,
             )
         if stage == "test" or stage is None:
             self.test_dataset = CROHMEDataset(
-                build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}", self.eval_batch_size),
+                build_dataset(
+                    self.folder,
+                    self.test_folder,
+                    self.eval_batch_size,
+                    self.max_size,
+                ),
                 False,
                 self.scale_aug,
             )
+
+
+    # def setup(self, stage: Optional[str] = None) -> None:
+    #     if stage == "fit" or stage is None:
+    #         self.train_dataset = CROHMEDataset(
+    #             build_dataset(self.zipfile_path, f"{self.dataset_name}/train",
+    #                           self.train_batch_size),
+    #             True,
+    #             self.scale_aug,
+    #         )
+    #         self.val_dataset = CROHMEDataset(
+    #             build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}",
+    #                           self.eval_batch_size),
+    #             False,
+    #             self.scale_aug,
+    #         )
+    #     if stage == "test" or stage is None:
+    #         self.test_dataset = CROHMEDataset(
+    #             build_dataset(self.zipfile_path, f"{self.dataset_name}/{self.test_year}",
+    #
+    #                           self.eval_batch_size),
+    #             False,
+    #             self.scale_aug,
+    #         )
 
     def train_dataloader(self):
         return DataLoader(
