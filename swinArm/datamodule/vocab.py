@@ -3,9 +3,7 @@ from functools import lru_cache
 from typing import Dict, List
 
 
-@lru_cache()
-def default_dict():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "dictionary_hme.txt")
+
 
 
 class CROHMEVocab:
@@ -14,7 +12,7 @@ class CROHMEVocab:
     SOS_IDX = 1
     EOS_IDX = 2
 
-    def __init__(self, dict_path: str = default_dict()) -> None:
+    def __init__(self, dict_path: str) -> None:
         self.word2idx = dict()
         self.word2idx["<pad>"] = self.PAD_IDX
         self.word2idx["<sos>"] = self.SOS_IDX
