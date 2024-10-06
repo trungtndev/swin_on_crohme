@@ -95,6 +95,9 @@ def extract_data(folder: str, dir_name: str) -> Data:
         img_name = tmp[0]
         formula = tmp[1:]
         img = images[img_name]
+
+        for i in img:
+            i = i.resize((224, 224))
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
@@ -128,11 +131,7 @@ def collate_fn(batch):
     images_x = batch[1]
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
-# ======================= Resize ===================================
-    for i in images_x:
-        print(i)
-        i = i.resize((224, 224))
-# =====================================================================================
+
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
 
