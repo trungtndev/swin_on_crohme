@@ -146,7 +146,7 @@ def collate_fn(batch):
     for idx, s_x in enumerate(images_x):
         x[idx, :, : heights_x[idx], : widths_x[idx]] = s_x
         x_mask[idx, : heights_x[idx], : widths_x[idx]] = 0
-
+    print(seqs_y)
     return Batch(fnames, x, x_mask, seqs_y)
 
 
