@@ -20,8 +20,8 @@ class CROHMEDataset(Dataset):
         self.ds = ds
 
         trans_list = []
-        trans_list.append(tr.ToTensor())
         trans_list.append(tr.Resize((224, 224)))
+        trans_list.append(tr.ToTensor())
 
         # if is_train and scale_aug:
         #     trans_list.append(ScaleAugmentation(K_MIN, K_MAX))
