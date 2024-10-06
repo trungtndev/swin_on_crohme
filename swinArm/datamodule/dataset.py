@@ -34,8 +34,8 @@ class CROHMEDataset(Dataset):
             )
 
         trans_list += [
-            tr.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225]),
+            # tr.Normalize(mean=[0.485, 0.456, 0.406],
+            #              std=[0.229, 0.224, 0.225]),
             tr.Resize((224, 224)),
         ]
         self.transform = tr.Compose(trans_list)
