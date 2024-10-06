@@ -192,7 +192,7 @@ class CROHMEDatamodule(pl.LightningDataModule):
                 self.scale_aug,
             )
             self.val_dataset = CROHMEDataset(
-                build_dataset(self.folder, self.test_folder, self.eval_batch_size, self.max_size,
+                build_dataset(self.folder, self.test_folder, self.eval_batch_size,
                 ),
                 False,
                 self.scale_aug,
@@ -203,7 +203,6 @@ class CROHMEDatamodule(pl.LightningDataModule):
                     self.folder,
                     self.test_folder,
                     self.eval_batch_size,
-                    self.max_size,
                 ),
                 False,
                 self.scale_aug,
