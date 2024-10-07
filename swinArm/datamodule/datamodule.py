@@ -91,17 +91,17 @@ def extract_data(folder: str, dir_name: str) -> Data:
     with open(os.path.join(folder, dir_name, "caption.txt"), "r") as f:
         captions = f.readlines()
     data = []
-    i = 0
+    # i = 0
     for line in captions:
-        if i > 40000:
-            break
-        i += 1
+        # if i > 40000:
+        #     break
+        # i += 1
         tmp = line.strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
         img = images[img_name]
 #========= Resize image to 224x224 =========
-        img = cv2.resize(img, (128, 128)) / 255.0
+        img = cv2.resize(img, (224, 224)) / 255.0
 #==========================================
 
         data.append((img_name, img, formula))
