@@ -15,7 +15,7 @@ class SwinV1Encoder(pl.LightningModule):
                  ):
         super().__init__()
         self.swinv1 = SwinTransformer(
-            img_size=224,
+            img_size=128,
             in_chans=1,
             embed_dim=64,
             depths=(2, 2, 8, 2),
