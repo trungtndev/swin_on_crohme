@@ -91,7 +91,11 @@ def extract_data(folder: str, dir_name: str) -> Data:
     with open(os.path.join(folder, dir_name, "caption.txt"), "r") as f:
         captions = f.readlines()
     data = []
+    i = 0
     for line in captions:
+        if i > 40000:
+            break
+        i += 1
         tmp = line.strip().split()
         img_name = tmp[0]
         formula = tmp[1:]
